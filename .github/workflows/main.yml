@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    name: Build V6.0 3D Android APK
+    name: Build V6.0.1 Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -30,9 +30,9 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Extract V6.0 project
+      - name: Extract V6.0.1 project
         run: |
-          unzip -o Backrooms_The_Descent_3D_v6.zip -d extracted
+          unzip -o Backrooms_The_Descent_3D_v6_1.zip -d extracted
 
       - name: Locate Android project
         run: |
@@ -44,18 +44,23 @@ jobs:
           echo "BUILD_DIR=$BUILD_DIR" >> "$GITHUB_ENV"
           echo "Found project at: $BUILD_DIR"
 
-      - name: Fix pickup model scaling
-        run: |
-          sed -i 's/\.scale(\.55f)/.scale(.55f, .55f, .55f)/' "$BUILD_DIR/app/src/main/java/com/carter/backrooms/DescentGame.java"
-          grep -n 'scale(.55f' "$BUILD_DIR/app/src/main/java/com/carter/backrooms/DescentGame.java"
-
       - name: Build debug APK
-        run: gradle -p "$BUILD_DIR" --no-daemon :app:assembleDebug
+        run: |
+          gradle -p "$BUILD_DIR" --no-daemon :app:assembleDebug
+
+      - name: Verify APK
+        run: |
+          APK="$BUILD_DIR/app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -f "$APK" ]; then
+            echo "ERROR: APK was not generated."
+            exit 1
+          fi
+          ls -lh "$APK"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Backrooms-The-Descent-V6-3D
+          name: Backrooms-The-Descent-V6-1
           path: extracted/**/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           
