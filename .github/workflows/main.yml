@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   build:
-    name: Build V6.0.1 Android APK
+    name: Build V6.0.2 Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -30,9 +30,9 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Extract V6.0.1 project
+      - name: Extract V6.0.2 project
         run: |
-          unzip -o Backrooms_The_Descent_3D_v6_1.zip -d extracted
+          unzip -o Backrooms_The_Descent_3D_v6_2.zip -d extracted
 
       - name: Locate Android project
         run: |
@@ -60,7 +60,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Backrooms-The-Descent-V6-1
+          name: Backrooms-The-Descent-V6-2
           path: extracted/**/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           
