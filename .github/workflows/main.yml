@@ -31,7 +31,7 @@ jobs:
 
       - name: Extract game project
         run: |
-          unzip -o Backrooms_The_Descent_GitHub_Project.zip -d extracted
+          unzip -o Backrooms_The_Descent_Masterpiece_v5.zip -d extracted
 
       - name: Build APK
         run: |
