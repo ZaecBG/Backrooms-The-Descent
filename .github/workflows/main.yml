@@ -4,14 +4,15 @@ name: Build Backrooms Android APK
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
   build:
-    name: Build V1.1 Android APK
+    name: Build Backrooms V1.2
     runs-on: ubuntu-latest
 
     steps:
@@ -29,14 +30,19 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Extract project
+      - name: Extract V1.2 project
         run: |
-          unzip -o Backrooms_The_Descent_V1.1_Interactions.zip -d extracted
+          unzip -o Backrooms_The_Descent_V1.2_Menu_HUD.zip -d extracted
 
-      - name: Locate project
+      - name: Locate Android project
         run: |
           BUILD_DIR="$(find extracted -type f -name settings.gradle -printf '%h\n' | head -n 1)"
-          test -n "$BUILD_DIR"
+
+          if [ -z "$BUILD_DIR" ]; then
+            echo "ERROR: settings.gradle not found"
+            exit 1
+          fi
+
           echo "BUILD_DIR=$BUILD_DIR" >> "$GITHUB_ENV"
 
       - name: Build APK
@@ -52,7 +58,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Backrooms-The-Descent-V1.1
+          name: Backrooms-The-Descent-V1.2
           path: extracted/**/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           
